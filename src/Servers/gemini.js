@@ -189,39 +189,39 @@ export async function runAgent(repoUrl) {
 
   // Decide what to send Gemini
   let prompt;
-  if (metadata.readme) {
-    prompt = `You are a README generator.
-This repository already has a README. Use it as primary context but improve it.
+    prompt = `You are a professional README generator for open-source GitHub repositories. 
+Your job is to write a clear, accurate, and detailed project description based ONLY on the provided metadata.
 
-README content:
-"""
-${metadata.readme}
-"""
+### Rules:
+- Always stay factual and consistent with metadata (name, description, repo_url, languages, project structure). 
+- Do not invent features or usage steps that are not supported by metadata.
+- Description must be 6-7 lines, professional, and concise, explaining the purpose, core functionality, and potential use cases of the project.
+- Features must be listed as clear, developer-friendly bullet points.
+- Usage instructions must be practical and based on common workflows (npm, yarn, docker, etc. depending on tech stack).
+- Do NOT wrap the output in code blocks.
+- Output strictly valid JSON in the exact schema.
 
-Do not wrap the output in code blocks. Output only raw JSON.
-
-Generate ONLY JSON in this exact format:
+### Example output:
 {
-  "description": "6-7 line improved description of the project",
-  "features": in array format,
-  "usage": int array format
-}`;
-  } else {
-    prompt = `You are a README generator.
-This repository does not have a README. Use metadata to generate one.
+  "description": "This project is a Node.js-based API that provides real-time weather updates. It integrates external APIs to fetch data, caches responses for efficiency, and exposes REST endpoints for client applications. Built with Express and MongoDB, the project ensures scalability and maintainability. Developers can extend it with custom routes or integrate it into larger applications. Ideal for learning API development and rapid prototyping.",
+  "features": [
+    "REST API endpoints for real-time weather data",
+    "Express.js backend with modular routes",
+    "MongoDB integration for data persistence",
+    "Caching layer for optimized performance",
+    "Error handling and validation middleware"
+  ],
+  "usage": [
+    "npm install",
+    "npm run dev",
+    "Open http://localhost:3000/api/weather"
+  ]
+}
 
-Metadata:
+### Metadata:
 ${JSON.stringify(metadata, null, 2)}
 
-Do not wrap the output in code blocks. Output only raw JSON.
-
-Generate ONLY JSON in this exact format:
-{
-  "description": "6-7 line improved description of the project",
-  "features": in array format,
-  "usage": in array format
-}`;
-  }
+Generate ONLY JSON in the above schema.`;
 
   const response = await ai.models.generateContent({
     model: "gemini-2.5-flash",
