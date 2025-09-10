@@ -35,7 +35,7 @@ async function fetchRepoData({ repoUrl }) {
     `https://api.github.com/repos/${owner}/${repo}/languages`
   );
 
-  // 3. Project structure (recursive)
+  // 3. Project structure 
   let projectStructure = [];
 
   async function getStructure(owner, repo, path = "", prefix = "") {
@@ -79,19 +79,6 @@ async function fetchRepoData({ repoUrl }) {
     projectStructure = ["Project structure unavailable due to API limitations"];
   }
 
-  // 4. README fetch
-  let readmeText = null;
-  try {
-    const readmeRes = await ghFetch(
-      `https://api.github.com/repos/${owner}/${repo}/readme`
-    );
-
-    if (readmeRes && readmeRes.content) {
-      readmeText = Buffer.from(readmeRes.content, "base64").toString("utf-8");
-    }
-  } catch {
-    readmeText = null;
-  }
 
   return {
     owner,
@@ -103,7 +90,6 @@ async function fetchRepoData({ repoUrl }) {
     license: repoRes.license ? repoRes.license.spdx_id : "unlicensed",
     languages: Object.keys(langsRes),
     structure: projectStructure,
-    readme: readmeText,
   };
 }
 
@@ -112,7 +98,6 @@ function buildReadme({ metadata, generated }) {
 
   const description =
     generated.description ||
-    metadata.description ||
     "A production-ready open-source project.";
 
   const features = (generated.features || []).filter((f) => f);
@@ -126,7 +111,7 @@ const structure = metadata.structure?.length
   ? "```\n" + metadata.structure.join("\n") + "\n```"
   : "(structure unavailable)";
 
-  const license = metadata.license || "MIT";
+  const license = metadata.license || "unlicensed";
 
   const features_md = features.length
     ? features.map((f) => `- ${f}`).join("\n")
@@ -187,7 +172,6 @@ export async function runAgent(repoUrl) {
     return `Error fetching repo: ${err.message}`;
   }
 
-  // Decide what to send Gemini
   let prompt;
     prompt = `You are a professional README generator for open-source GitHub repositories. 
 Your job is to write a clear, accurate, and detailed project description based ONLY on the provided metadata.
