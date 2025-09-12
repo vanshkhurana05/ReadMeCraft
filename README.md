@@ -64,8 +64,7 @@ npm run dev
 ```
 MIT
 ```
-License
-unlicensed
+
 
 
 
