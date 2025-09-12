@@ -9,9 +9,10 @@ This project helps generate professional README.md files for your GitHub reposit
 - Provides a template-based structure.
 
 # Screenshots 
-![alt text](https://i.ibb.co/6Jp1B7j/image.png)
-![alt text](https://i.ibb.co/1fF9V60/image-1.png)
-![alt text](https://i.ibb.co/39fD5bP/image-2.png)
+![alt text](https://i.ibb.co/WpdPt4mQ/image.png)
+![alt text](https://i.ibb.co/fYjCRvXM/image-1.png)
+![alt text](https://i.ibb.co/TxKVDGNJ/image-2.png)
+
 
 ## 💻 Tech Stack
 
